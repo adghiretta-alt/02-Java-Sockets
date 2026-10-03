@@ -23,17 +23,18 @@ public class Main extends Application {
 
     private String playerName;
 
+    // Guardamos el último tablero recibido
+    private JSONObject lastBoard;
+
     @Override
     public void start(Stage stage) throws Exception {
 
         instance = this;
-
         this.stage = stage;
 
         showConfig();
 
         stage.setTitle("Sudoku Multijugador");
-
         stage.show();
     }
 
@@ -51,11 +52,8 @@ public class Main extends Application {
         configController =
                 loader.getController();
 
-        Scene scene = new Scene(
-                root,
-                500,
-                400
-        );
+        Scene scene =
+                new Scene(root, 500, 400);
 
         stage.setScene(scene);
     }
@@ -67,12 +65,13 @@ public class Main extends Application {
 
         playerName = name;
 
-        webSocket = new WebSocketService(
-                host,
-                port,
-                name,
-                this::receiveMessage
-        );
+        webSocket =
+                new WebSocketService(
+                        host,
+                        port,
+                        name,
+                        this::receiveMessage
+                );
     }
 
     private void receiveMessage(String message) {
@@ -98,22 +97,21 @@ public class Main extends Application {
 
                         if (playersController != null) {
 
-                            playersController
-                                    .updatePlayers(
-                                            obj.getJSONArray(
-                                                    "players"
-                                            )
-                                    );
+                            playersController.updatePlayers(
+                                    obj.getJSONArray("players")
+                            );
                         }
 
                         break;
 
                     case "board":
 
+                        // Guardamos siempre el último tablero
+                        lastBoard = obj;
+
                         if (sudokuController != null) {
 
-                            sudokuController
-                                    .updateBoard(obj);
+                            sudokuController.updateBoard(obj);
                         }
 
                         break;
@@ -122,12 +120,9 @@ public class Main extends Application {
 
                         if (sudokuController != null) {
 
-                            sudokuController
-                                    .showMessage(
-                                            obj.getString(
-                                                    "message"
-                                            )
-                                    );
+                            sudokuController.showMessage(
+                                    obj.getString("message")
+                            );
                         }
 
                         break;
@@ -136,12 +131,9 @@ public class Main extends Application {
 
                         if (configController != null) {
 
-                            configController
-                                    .showError(
-                                            obj.getString(
-                                                    "message"
-                                            )
-                                    );
+                            configController.showError(
+                                    obj.getString("message")
+                            );
                         }
 
                         break;
@@ -170,8 +162,9 @@ public class Main extends Application {
             playersController =
                     loader.getController();
 
-            playersController
-                    .setPlayerName(playerName);
+            playersController.setPlayerName(
+                    playerName
+            );
 
             stage.setScene(
                     new Scene(
@@ -203,8 +196,9 @@ public class Main extends Application {
             sudokuController =
                     loader.getController();
 
-            sudokuController
-                    .setPlayerName(playerName);
+            sudokuController.setPlayerName(
+                    playerName
+            );
 
             stage.setScene(
                     new Scene(
@@ -213,6 +207,16 @@ public class Main extends Application {
                             650
                     )
             );
+
+            // IMPORTANTE:
+            // Si ya habíamos recibido el tablero,
+            // lo pintamos ahora.
+            if (lastBoard != null) {
+
+                sudokuController.updateBoard(
+                        lastBoard
+                );
+            }
 
         } catch (Exception e) {
 

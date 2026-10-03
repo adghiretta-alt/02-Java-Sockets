@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextInputDialog;
 import javafx.scene.layout.GridPane;
 
@@ -17,7 +18,7 @@ public class SudokuController {
     private GridPane gridSudoku;
 
     @FXML
-    private javafx.scene.control.Label lblPlayer;
+    private Label lblPlayer;
 
     private final Button[][] cells =
             new Button[9][9];
@@ -37,9 +38,7 @@ public class SudokuController {
 
         gridSudoku.getChildren().clear();
 
-        /*
-         * Crear las 81 casillas.
-         */
+        // Crear las 81 casillas
         for (int row = 0; row < 9; row++) {
 
             for (int col = 0; col < 9; col++) {
@@ -57,8 +56,13 @@ public class SudokuController {
                         55
                 );
 
+                button.setStyle(
+                        "-fx-font-size: 18px;"
+                );
+
                 cells[row][col] = button;
 
+                // Casilla original del Sudoku
                 if (value != 0) {
 
                     button.setText(
@@ -69,6 +73,8 @@ public class SudokuController {
 
                     button.setStyle(
                             "-fx-background-color: #dddddd;"
+                            + "-fx-font-size: 18px;"
+                            + "-fx-font-weight: bold;"
                     );
 
                 } else {
@@ -90,10 +96,7 @@ public class SudokuController {
             }
         }
 
-        /*
-         * Pintamos las casillas que algún jugador
-         * ya ha acertado.
-         */
+        // Pintar las casillas resueltas
         JSONArray solved =
                 board.getJSONArray("solved");
 
@@ -116,17 +119,21 @@ public class SudokuController {
             Button button =
                     cells[row][col];
 
-            button.setText(
-                    String.valueOf(value)
-            );
+            if (button != null) {
 
-            button.setDisable(true);
+                button.setText(
+                        String.valueOf(value)
+                );
 
-            button.setStyle(
-                    "-fx-background-color: #90EE90;"
-                    + "-fx-text-fill: green;"
-                    + "-fx-font-weight: bold;"
-            );
+                button.setDisable(true);
+
+                button.setStyle(
+                        "-fx-background-color: #90EE90;"
+                        + "-fx-text-fill: green;"
+                        + "-fx-font-size: 18px;"
+                        + "-fx-font-weight: bold;"
+                );
+            }
         }
     }
 
