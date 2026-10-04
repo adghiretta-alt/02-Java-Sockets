@@ -1,9 +1,0 @@
-com\server\GameServer.class
-com\server\Main.class
-com\client\PlayersController.class
-com\client\SudokuController.class
-com\client\Main.class
-com\server\Player.class
-com\client\WebSocketService$1.class
-com\client\ConfigController.class
-com\client\WebSocketService.class
